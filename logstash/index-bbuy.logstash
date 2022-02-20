@@ -1,8 +1,13 @@
 input {
   file {
-    path => ["/workspace/datasets/product_data/products/*.xml"]  #Put in the path to the ungzipped/untarred product data.  To start smaller, simply select a smaller number of files or copy a few files to a different directory.
-    start_position => "beginning"
-    codec => multiline {
+      path => ["/workspace/datasets/product_data/products/*.xml"] 
+        file_chunk_size => 52428800
+        mode => "read"
+        exit_after_read => true
+        sincedb_path => "/dev/null"
+        file_completed_action => "log"
+        file_completed_log_path => "/dev/null"
+        codec => multiline {
             pattern => "<product>"
             negate => "true"
             what => "previous"
@@ -14,8 +19,7 @@ input {
         source => "message"
         target => "xml_doc"
         store_xml => "false"
-        xpath => [ # NOTE: this is not a complete list of fields.  If you wish to add more, put in the appropriate XPath expression.
-                  #TODO: is there a way to do this using XPath/XSL Functions so that we don't have to maintain a big list?
+        xpath => [
             "/product/productId/text()", "productId",
             "/product/sku/text()", "sku",
             "/product/name/text()", "name",
@@ -70,8 +74,7 @@ input {
             "/product/width/text()", "width",
             "/product/longDescription/text()", "longDescription",
             "/product/longDescriptionHtml/text()", "longDescriptionHtml",
-            "/product/features/*/text()", "features" # Note the match all here to get the subfields
-
+            "/product/features/*/text()", "features" 
         ]
       }
 
@@ -87,7 +90,8 @@ input {
 output {
   opensearch {
     hosts => ["https://localhost:9200"]
-    index => "bbuy_products"
+    index => "bbuy_products_retry"
+    action => "create"
     user => "admin"
     password => "admin"
     document_id => "%{sku}"
