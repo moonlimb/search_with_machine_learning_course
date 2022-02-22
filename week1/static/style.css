@@ -15,6 +15,7 @@
 
 #query{
     width: 400px;
+    background-color: #2F5BB7;
 }
 
 /* See https://css-tricks.com/snippets/css/complete-guide-grid/ for details on grid */
@@ -25,12 +26,28 @@
     grid-column-gap: 15px;
 }
 
-.search-results {
+.top-bar {
+    background: #0d08af;
+    color: #e4e7de;
+    padding: 2px;
+    border-radius: 2px;
+    font-style: normal;
+}
 
+.search-results {
+    font-family: Arial;
+    justify-content: center;
+    width: 80%;
+    padding: 0px;
+    background: rgb(207, 207, 255);
+    outline: none;
+    border-radius: 2px;
+    font-style: tahoma;
 }
 
 .search-result{
-    margin-bottom: 10px;
+    margin-bottom: 15px;
+    padding: 10px;
 }
 
 .search-result > img{
@@ -38,7 +55,9 @@
 }
 
 .search-result-odd{
-    background: lightgray;
+    margin-bottom: 10px;
+    padding: 10px;
+    background: rgb(250, 250, 250);
 }
 
 .search-result-name {
@@ -112,4 +131,46 @@ Headers and footers
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+/* Source: https://1stwebdesigner.com/free-code-snippets-css-buttons*/
+/* Blue button as seen on translate.google.com*/
+button.blue {
+    margin-top: 10px;
+    color: white;
+    background: #4C8FFB;
+    border: 1px #3079ED solid;
+    box-shadow: inset 0 1px 0 #80B0FB;
+}
+
+button.blue:hover {
+    border: 1px #2F5BB7 solid;
+    box-shadow: 0 1px 1px #EAEAEA, inset 0 1px 0 #5A94F1;
+    background: #3F83F1;
+}
+
+button.blue:active {
+    box-shadow: inset 0 2px 5px #2370FE;   
+}
+
+
+/* Orange button as seen on blogger.com*/
+button.orange {
+    color: white;
+    border: 1px solid #FB8F3D; 
+    background: -webkit-linear-gradient(top, #FDA251, #FB8F3D);
+    background: -moz-linear-gradient(top, #FDA251, #FB8F3D);
+    background: -ms-linear-gradient(top, #FDA251, #FB8F3D);
+}
+
+button.orange:hover {
+    border: 1px solid #EB5200;
+    background: -webkit-linear-gradient(top, #FD924C, #F9760B); 
+    background: -moz-linear-gradient(top, #FD924C, #F9760B); 
+    background: -ms-linear-gradient(top, #FD924C, #F9760B); 
+    box-shadow: 0 1px #EFEFEF;
+}
+
+button.orange:active {
+    box-shadow: inset 0 1px 1px rgba(0,0,0,0.3);
 }

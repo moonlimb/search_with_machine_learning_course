@@ -36,6 +36,13 @@ def process_filters(filters_input):
 
     return filters, display_filters, applied_filters
 
+def search(client, query, index_name):
+    response = client.search(
+        body = query,
+        index = index_name
+    )
+    print(f'\nSearch results: response')
+    return response
 
 # Our main query route.  Accepts POST (via the Search box) and GETs via the clicks on aggregations/facets
 @bp.route('/query', methods=['GET', 'POST'])
@@ -74,8 +81,9 @@ def query():
         query_obj = create_query("*", [], sort, sortDir)
 
     print("query obj: {}".format(query_obj))
-    response = None   # TODO: Replace me with an appropriate call to OpenSearch
-    # Postprocess results here if you so desire
+    index_name = 'bbuy_products'
+    client = get_opensearch()
+    response = search(client, query_obj, index_name) 
 
     #print(response)
     if error is None:
