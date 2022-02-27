@@ -34,8 +34,6 @@ done
 shift $((OPTIND -1))
 
 
-
-
 # NOTE: You must run this with the appropriate Pyenv VENV active.
 # $SOURCE_DIR -- path to base of source code, eg. search_with_machine_learning/src/main/python
 # $WEEK -- what week to look into
