@@ -5,9 +5,35 @@ import requests
 
 def create_rescore_ltr_query(user_query, query_obj, click_prior_query, ltr_model_name, ltr_store_name,
                              active_features=None, rescore_size=500, main_query_weight=1, rescore_query_weight=2):
+    """
+    user_query
+    query_obj
+    click_prior_query
+    ..
+
+    Adds `rescore` function to query object.
+    """
     # Create the base query, use a much bigger window
-    #add on the rescore
-    print("IMPLEMENT ME: create_rescore_ltr_query")
+    # print("IMPLEMENT ME: create_rescore_ltr_query")
+    print("Create_rescore_ltr_query: Add rescore to query object")
+    query_obj["rescore"] = {
+        "window_size": rescore_size, #10,
+        "query": {
+            "rescore_query": {
+                "sltr": {
+                    "params": {
+                        "keywords": user_query 
+                    },
+                    "model": ltr_model_name,
+                    "store": ltr_store_name,
+                    # Since we are using a named store, as opposed to simply '_ltr', we need to pass it in
+                    "active_features": active_features#[title_query_feature_name, body_query_feature_name, price_func_feature_name]
+                }
+            },
+            "query_weight": main_query_weight,
+            "rescore_query_weight": rescore_query_weight # Magic number, but let's say LTR matches are 2x baseline matches
+        }
+    }
     return query_obj
 
 # take an existing query and add in an SLTR so we can use it for explains to see how much SLTR contributes
