@@ -19,6 +19,9 @@ import xgb_utils as xgbu
 from opensearchpy import OpenSearch
 
 
+# Ignore pandas Index64 deprecation warning 
+import warnings
+warnings.simplefilter(action='ignore', category=FutureWarning)
 
 
 if __name__ == "__main__":
@@ -147,6 +150,8 @@ if __name__ == "__main__":
     if len(vars(args)) == 0:
         parser.print_usage()
         exit()
+
+
 
     host = args.host
     port = args.port

@@ -228,27 +228,57 @@ class DataPrepper:
     #         {'name': 'price_function', 'value': 0.0}]}]
     # For each query, make a request to OpenSearch with SLTR logging on and extract the features
     def __log_ltr_query_features(self, query_id, key, query_doc_ids, click_prior_query, no_results, terms_field="_id"):
+        # import ipdb;ipdb.set_trace()
 
         log_query = lu.create_feature_log_query(key, query_doc_ids, click_prior_query, self.featureset_name,
                                                 self.ltr_store_name,
                                                 size=len(query_doc_ids), terms_field=terms_field)
         # IMPLEMENT_START --
-        print("IMPLEMENT ME: __log_ltr_query_features: Extract log features out of the LTR:EXT response and place in a data frame")
-        # Loop over the hits structure returned by running `log_query` and then extract out the features from the response per query_id and doc id.  Also capture and return all query/doc pairs that didn't return features
-        # Your structure should look like the data frame below
+        # print("IMPLEMENT ME: __log_ltr_query_features: Extract log features out of the LTR:EXT response and place in a data frame")
+        print("Extract log features out of the LTR:EXT response and place in a data frame")
+
+        # Run the query just like any other search
+        response = self.opensearch.search(body=log_query, index=self.index_name)
+
+        if not response or 'hits' not in response:
+            raise Exception(f'Invalid ES response: response')
+
+        # ML: Initialize feature_results
         feature_results = {}
         feature_results["doc_id"] = []  # capture the doc id so we can join later
         feature_results["query_id"] = []  # ^^^
         feature_results["sku"] = []
-        feature_results["salePrice"] = []
-        feature_results["name_match"] = []
-        rng = np.random.default_rng(12345)
-        for doc_id in query_doc_ids:
+        # specify features (necessary since we want to capture)
+        features = ['salePrice', 'name_match', 'name_phrase_match', 'name_hyphens_min_df', 'regularPrice']
+        for feature in features:
+            # initialize
+            feature_results[feature] = []
+
+        # Loop over the hits structure returned by running `log_query` and then extract out the features from the response per query_id and doc id.  Also capture and return all query/doc pairs that didn't return features
+        # Your structure should look like the data frame below
+        for (i, hit) in enumerate(response['hits']['hits']):
+            print(f'Hit number: {i}')
+
+            # per query_id and doc id, extract out features from the response
+            doc_id =  hit['_id'] # same as sku
+            log_entry = hit['fields']['_ltrlog'][0]['log_entry']
+
             feature_results["doc_id"].append(doc_id)  # capture the doc id so we can join later
             feature_results["query_id"].append(query_id)
             feature_results["sku"].append(doc_id)  # ^^^
-            feature_results["salePrice"].append(rng.random())
-            feature_results["name_match"].append(rng.random())
+
+            # ML: current features - name_match, name_phrase_match, name_hyphens_min_df, salePrice, regularPrice
+            # Also capture and return all query/doc pairs that didn't return features
+            if not log_entry:
+                print('MISSING LOG ENTRY')
+                MOCK_VALUE = 0 
+                for feature in features:
+                    feature_results[feature].append(MOCK_VALUE) 
+
+            for feature in log_entry:
+                # ASK: what should name be if feature is missing `name`?
+                feature_results[feature.get('name')].append(feature.get('value', 0))
+
         frame = pd.DataFrame(feature_results)
         return frame.astype({'doc_id': 'int64', 'query_id': 'int64', 'sku': 'int64'})
         # IMPLEMENT_END

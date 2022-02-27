@@ -14,9 +14,11 @@ def plots(xgb_model, xgb_model_name, xgb_feat_map, xgb_plot):
         plt.rcParams["figure.figsize"]=[18,18]
         plt.rcParams["figure.autolayout"] = True
         num_trees = len(bst.get_dump(fmap=xgb_feat_map))
+
         print("Plotting trees: %s" % (num_trees-1))
         model_plot = plot_tree(bst, fmap=xgb_feat_map, num_trees=num_trees-1)
         model_plot.figure.savefig("%s/%s_tree.png" % (xgb_plot, model_name), dpi=300)
+
         print("Plotting feature importance")
         impt_plt = plot_importance(bst, fmap=xgb_feat_map)
         impt_plt.figure.savefig("%s/%s_importance.png" % (xgb_plot, model_name), dpi=300)
