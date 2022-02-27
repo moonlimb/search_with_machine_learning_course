@@ -9,8 +9,7 @@ def create_rescore_ltr_query(user_query, query_obj, click_prior_query, ltr_model
     Adds `rescore` function to query object.
     """
     # Create the base query, use a much bigger window
-    # print("IMPLEMENT ME: create_rescore_ltr_query")
-    print("Create_rescore_ltr_query: Add rescore to query object")
+    # print("Create_rescore_ltr_query: Add rescore to query object")
     query_obj["rescore"] = {
         "window_size": rescore_size, #10,
         "query": {
@@ -109,8 +108,8 @@ def create_feature_log_query(query, doc_ids, click_prior_query, featureset_name,
                             "featureset": featureset_name,
                             "store": ltr_store_name,
                             "params": {
-                                "keywords": query
-                                # "click_prior_query": click_prior_query
+                                "keywords": query,
+                                "click_prior_query": click_prior_query
                             }
                         }
                     }
@@ -127,8 +126,6 @@ def create_feature_log_query(query, doc_ids, click_prior_query, featureset_name,
             }
         }
     }
-    # Run the query just like any other search
-    # response = client.search(body=query_obj, index=index_name) 
     return query_obj 
 
 
