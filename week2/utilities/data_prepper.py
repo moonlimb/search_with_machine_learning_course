@@ -235,7 +235,6 @@ class DataPrepper:
                                                 size=len(query_doc_ids), terms_field=terms_field)
         # IMPLEMENT_START --
         # print("IMPLEMENT ME: __log_ltr_query_features: Extract log features out of the LTR:EXT response and place in a data frame")
-        print("Extract log features out of the LTR:EXT response and place in a data frame")
 
         # Run the query just like any other search
         response = self.opensearch.search(body=log_query, index=self.index_name)
@@ -244,40 +243,27 @@ class DataPrepper:
             raise Exception(f'Invalid ES response: response')
 
         # ML: Initialize feature_results
-        feature_results = {}
-        feature_results["doc_id"] = []  # capture the doc id so we can join later
-        feature_results["query_id"] = []  # ^^^
-        feature_results["sku"] = []
-        # specify features (necessary since we want to capture)
-        features = ['salePrice', 'name_match', 'name_phrase_match', 'name_hyphens_min_df', 'regularPrice']
-        for feature in features:
-            # initialize
-            feature_results[feature] = []
-
+        feature_results = []
+        
         # Loop over the hits structure returned by running `log_query` and then extract out the features from the response per query_id and doc id.  Also capture and return all query/doc pairs that didn't return features
         # Your structure should look like the data frame below
         for (i, hit) in enumerate(response['hits']['hits']):
-            print(f'Hit number: {i}')
 
             # per query_id and doc id, extract out features from the response
             doc_id =  hit['_id'] # same as sku
             log_entry = hit['fields']['_ltrlog'][0]['log_entry']
 
-            feature_results["doc_id"].append(doc_id)  # capture the doc id so we can join later
-            feature_results["query_id"].append(query_id)
-            feature_results["sku"].append(doc_id)  # ^^^
-
-            # ML: current features - name_match, name_phrase_match, name_hyphens_min_df, salePrice, regularPrice
-            # Also capture and return all query/doc pairs that didn't return features
-            if not log_entry:
-                print('MISSING LOG ENTRY')
-                MOCK_VALUE = 0 
-                for feature in features:
-                    feature_results[feature].append(MOCK_VALUE) 
+            feature_result = {
+                "doc_id": doc_id,
+                "query_id": query_id,
+                "sku": doc_id
+            }
 
             for feature in log_entry:
-                # ASK: what should name be if feature is missing `name`?
-                feature_results[feature.get('name')].append(feature.get('value', 0))
+                MOCK_DEFAULT_VALUE = 0
+                feature_result[feature.get('name')] = feature.get('value', MOCK_DEFAULT_VALUE)
+            
+            feature_results.append(feature_result)
 
         frame = pd.DataFrame(feature_results)
         return frame.astype({'doc_id': 'int64', 'query_id': 'int64', 'sku': 'int64'})
