@@ -86,7 +86,7 @@ def create_feature_log_query(query, doc_ids, click_prior_query, featureset_name,
             ltr_store_name = 'week2'
             size = 1
             terms_field = 'sku'
-    Returns:
+    Returns
         Query log object
     """
     # print("IMPLEMENT ME: create_feature_log_query")
@@ -99,7 +99,7 @@ def create_feature_log_query(query, doc_ids, click_prior_query, featureset_name,
                 "filter": [  # use a filter so that we don't actually score anything
                     {
                         "terms": {
-                            "_id": doc_ids
+                            terms_field: doc_ids
                         }
                     },
                     {  # use the LTR query bring in the LTR feature set

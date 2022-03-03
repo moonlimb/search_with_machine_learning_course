@@ -235,10 +235,13 @@ class DataPrepper:
         # IMPLEMENT_START --
 
         # Run the query just like any other search
-        response = self.opensearch.search(body=log_query, index=self.index_name)
+        try:
+            response = self.opensearch.search(body=log_query, index=self.index_name)
+        except RequestError as re:
+            raise Exception(f'[__log_ltr_query_features] Error making search request with body: ${log_query} to index: {self.index_name}')
 
         if not response or 'hits' not in response:
-            raise Exception(f'Invalid ES response: response')
+            raise Exception(f'[__log_ltr_query_features] Invalid ES response: {response}')
 
         # ML: Initialize feature_results
         feature_results = []

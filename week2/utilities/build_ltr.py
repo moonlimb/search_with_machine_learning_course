@@ -19,11 +19,6 @@ import xgb_utils as xgbu
 from opensearchpy import OpenSearch
 
 
-# Ignore pandas Index64 deprecation warning 
-import warnings
-warnings.simplefilter(action='ignore', category=FutureWarning)
-
-
 if __name__ == "__main__":
     host = 'localhost'
     port = 9200
