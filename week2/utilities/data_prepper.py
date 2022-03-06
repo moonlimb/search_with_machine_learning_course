@@ -233,22 +233,39 @@ class DataPrepper:
                                                 self.ltr_store_name,
                                                 size=len(query_doc_ids), terms_field=terms_field)
         # IMPLEMENT_START --
-        print("IMPLEMENT ME: __log_ltr_query_features: Extract log features out of the LTR:EXT response and place in a data frame")
+
+        # Run the query just like any other search
+        try:
+            response = self.opensearch.search(body=log_query, index=self.index_name)
+        except RequestError as re:
+            raise Exception(f'[__log_ltr_query_features] Error making search request with body: ${log_query} to index: {self.index_name}')
+
+        if not response or 'hits' not in response:
+            raise Exception(f'[__log_ltr_query_features] Invalid ES response: {response}')
+
+        # ML: Initialize feature_results
+        feature_results = []
+        
         # Loop over the hits structure returned by running `log_query` and then extract out the features from the response per query_id and doc id.  Also capture and return all query/doc pairs that didn't return features
         # Your structure should look like the data frame below
-        feature_results = {}
-        feature_results["doc_id"] = []  # capture the doc id so we can join later
-        feature_results["query_id"] = []  # ^^^
-        feature_results["sku"] = []
-        feature_results["salePrice"] = []
-        feature_results["name_match"] = []
-        rng = np.random.default_rng(12345)
-        for doc_id in query_doc_ids:
-            feature_results["doc_id"].append(doc_id)  # capture the doc id so we can join later
-            feature_results["query_id"].append(query_id)
-            feature_results["sku"].append(doc_id)  # ^^^
-            feature_results["salePrice"].append(rng.random())
-            feature_results["name_match"].append(rng.random())
+        for (i, hit) in enumerate(response['hits']['hits']):
+
+            # per query_id and doc id, extract out features from the response
+            doc_id =  hit['_id'] # same as sku
+            log_entry = hit['fields']['_ltrlog'][0]['log_entry']
+
+            feature_result = {
+                "doc_id": doc_id,
+                "query_id": query_id,
+                "sku": doc_id
+            }
+
+            for feature in log_entry:
+                MOCK_DEFAULT_VALUE = 0
+                feature_result[feature.get('name')] = feature.get('value', MOCK_DEFAULT_VALUE)
+            
+            feature_results.append(feature_result)
+
         frame = pd.DataFrame(feature_results)
         return frame.astype({'doc_id': 'int64', 'query_id': 'int64', 'sku': 'int64'})
         # IMPLEMENT_END
