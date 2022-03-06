@@ -76,7 +76,6 @@ def get_products_from_files(directory: str, writer: Any):
 
     for filename in os.listdir(directory):
         if filename.endswith(".xml"):
-        # if filename == "pruned_products_1.xml":
             print(f"Processing {filename}")
 
             f = os.path.join(directory, filename)
@@ -89,14 +88,13 @@ def get_products_from_files(directory: str, writer: Any):
                 # Check to make sure category name is valid
                 if check_valid_category_name(child):
                     # Choose last element in categoryPath as the leaf categoryId
-                    # print('elemnt num in categoryPath')
-                    # print(len(child.find('categoryPath')))
 
                     # PROMPT: try different category nodes => adjust granularity of category
                     leaf_index = len(child.find('categoryPath')) - 1
                     ancestor_depth_2_index = 2  
                     ancestor_depth_3_index = 3 
-                    category = child.find('categoryPath')[min(ancestor_depth_2_index, leaf_index)][0].text
+                    # category = child.find('categoryPath')[min(ancestor_depth_2_index, leaf_index)][0].text
+                    category = child.find('categoryPath')[min(ancestor_depth_3_index, leaf_index)][0].text
 
                     # Replace newline chars with spaces so fastText doesn't complain
                     name = child.find('name').text.replace('\n', ' ')
@@ -105,8 +103,9 @@ def get_products_from_files(directory: str, writer: Any):
                     writer.writerow([category, transformed_name])
                     # output.write(f"__label__{category} {transformed_name}")
 
-def remove_infrequent_products(df: pd.DataFrame, min_products: int) -> pd.DataFrame:
-    # reference: https://pandas.pydata.org/docs/reference/api/pandas.core.groupby.DataFrameGroupBy.filter.html
+def remove_infrequent_category_products(df: pd.DataFrame, min_products: int) -> pd.DataFrame:
+    """Remove categories with products less than min_products from dataframe"""
+    # Reference: https://pandas.pydata.org/docs/reference/api/pandas.core.groupby.DataFrameGroupBy.filter.html
 
     df = pd.read_csv(tempfile, names=['label', 'product_name'])
     return df.groupby('label').filter(lambda x: len(x) > min_products)
@@ -124,7 +123,7 @@ with open(tempfile, 'w') as f:
 
 with open(output_file, 'w') as output:
     if min_products > 0:
-        dff = remove_infrequent_products(tempfile, min_products)
+        dff = remove_infrequent_category_products(tempfile, min_products)
         for _, row in dff.iterrows():
             category = row[0]
             product_name = row[1]

@@ -13,6 +13,9 @@ bp = Blueprint('documents', __name__, url_prefix='/documents')
 # Take in a JSON document and return a JSON document
 @bp.route('/annotate', methods=['POST'])
 def annotate():
+    """
+
+    """
     if request.mimetype == 'application/json':
         the_doc = request.get_json()
         response = {}
@@ -25,6 +28,10 @@ def annotate():
             if the_text is not None and the_text.find("%{") == -1:
                 if item == "name":
                     if syns_model is not None:
-                        print("IMPLEMENT ME: call nearest_neighbors on your syn model and return it as `name_synonyms`")
+                        # TODO: work in progress
+                        # print(the_text)
+                        # import ipdb;ipdb.set_trace(the_text)
+                        # print("IMPLEMENT ME: call nearest_neighbors on your syn model and return it as `name_synonyms`")
+                        response['name_synonyms'] = syns_model.nearest_neighbors()
         return jsonify(response)
     abort(415)
