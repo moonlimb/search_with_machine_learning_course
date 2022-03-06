@@ -90,7 +90,7 @@ input {
 output {
   opensearch {
     hosts => ["https://localhost:9200"]
-    index => "bbuy_products_retry"
+    index => "bbuy_products"
     action => "create"
     user => "admin"
     password => "admin"

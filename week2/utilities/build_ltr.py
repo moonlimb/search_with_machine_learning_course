@@ -21,8 +21,6 @@ import xgb_utils as xgbu
 from opensearchpy import OpenSearch
 
 
-
-
 if __name__ == "__main__":
     host = 'localhost'
     port = 9200
@@ -149,6 +147,8 @@ if __name__ == "__main__":
     if len(vars(args)) == 0:
         parser.print_usage()
         exit()
+
+
 
     host = args.host
     port = args.port
