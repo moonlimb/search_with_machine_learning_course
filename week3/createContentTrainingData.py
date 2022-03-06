@@ -110,11 +110,6 @@ def remove_infrequent_category_products(df: pd.DataFrame, min_products: int) -> 
     df = pd.read_csv(tempfile, names=['label', 'product_name'])
     return df.groupby('label').filter(lambda x: len(x) > min_products)
 
-    # remover = df.groupby('label').count().rename(columns={"product_name":"product_count"})
-    # labels = remover[remover.product_count > min_products].reset_index().label.tolist()
-    # dff = df[df.label.isin(labels)]
-    # return dff
-
 tempfile = 'tempfile.csv'
 with open(tempfile, 'w') as f:
     writer = csv.writer(f)
