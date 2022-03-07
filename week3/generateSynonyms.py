@@ -49,32 +49,4 @@ if __name__ == "__main__":
     get_synonyms(model, test_tokens)
 
 
-
 #### Results
-'''
-
-
-'''
-# gift card: gift => buy (0.8),
-# camera,
-# laptop,
-# battery => batteri, lithiumion (0.65)
-# dishwasher
-# brand:
-# best buy,
-# apple => apple®, appl
-# sony -> soni, sonic
-# barnes & nobles => nobl, barn
-# microsoft
-# model:
-# 2001,
-# beats by dr.dre,
-# playstation 2 => ps3
-# integra 500 (bosch) => intel, intern, internet :thinking_face:
-# ipad2 => ipad, ipad®, ipad™
-# attributes:
-# silver => silverblack
-# 100$ => 100w, 1000w
-# lcd => ledlcd, led
-# 1080p -> hdtv, 240hz
-# pink => ink, green, red…. :thinking_face:
