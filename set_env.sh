@@ -48,7 +48,7 @@ python extractTitles.py --sample_rate 0.5
 # unsupervised model, skip_gram is preferred over cbow by many b/c it uses contextual info 
 alias skip_gram="~/fastText-0.9.2/fasttext skipgram -input /workspace/datasets/fasttext/titles.txt -output /workspace/datasets/fasttext/title_model"
 
-alias run_title_model="
+alias run_title_model="~/fastText-0.9.2/fasttext nn /workspace/datasets/fasttext/title_model.bin"
 
 
-$ ~/fastText-0.9.2/fasttext skipgram -input /workspace/datasets/fasttext/titles.txt -output /workspace/datasets/fasttext/title_model -epoch 25 -minCount 25
+$ ~/fastText-0.9.2/fasttext skipgram -input /workspace/datasets/fasttext/titles.txt -output /workspace/datasets/fasttext/title_model -epoch 30 -minCount 50 -loss hs
