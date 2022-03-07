@@ -9,7 +9,6 @@ export FLASK_APP="week3"
 
 # level 1 - content classification
 python week3/createContentTrainingData.py --output /workspace/datasets/categories/output.fasttext --min_products 50
--lr 1.0 -epoch 50 -wordNgrams 2
 alias prep_data="python week3/createContentTrainingData.py --output /workspace/datasets/categories/output.fasttext"
 
 shuf /workspace/datasets/categories/output.fasttext --output /workspace/datasets/categories/shuffled-output.fasttext 
