@@ -42,6 +42,14 @@ P@1     0.502
 R@3     0.673
 R@5     0.737
 
+
+Run 5
+1000 minimum queries, epoch of 25, learning rate of 0.7, wordNgrams 5
+N       22246
+P@1     0.536
+R@3     0.703
+R@5     0.768
+
 2. For integrating query classification with search:
 
 TODO: haven't got to this part yet!
