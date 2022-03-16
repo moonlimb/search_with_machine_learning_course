@@ -41,6 +41,9 @@ def normalize_column(df: pd.DataFrame, col_name: str) -> pd.DataFrame:
 def shuffle_rows(df: pd.DataFrame, sample_rows: int=5000) -> pd.DataFrame:
     return df.sample(n=sample_rows)
 
+# RUN:  python week4/create_labeled_queries.py --min_queries 1000 --read_normalized True
+
+if __name__ == ''
 
 categories_file_name = r'/workspace/datasets/product_data/categories/categories_0001_abcat0010000_to_pcmcat99300050000.xml'
 
@@ -89,7 +92,7 @@ df = None
 if read_normalized:
     print(f'Read from normalized file: {normalized_queries_file_name}')
     df = pd.read_csv(normalized_queries_file_name)
-
+    df = df[df['query'].notna()]
 else: 
     df = pd.read_csv(queries_file_name)[['category', 'query']]
     df = df[df['category'].isin(categories)]
@@ -168,6 +171,6 @@ df['label'] = '__label__' + df['category']
 
 # Output labeled query data as a space-separated file, making sure that every category is in the taxonomy.
 df = df[df['category'].isin(categories)]
+df = df[df['query'].notna() & df['category'].notna() & df['label'].notna()] # not sure why this was ncessary for me
 df['output'] = df['label'] + ' ' + df['query']
-import ipdb; ipdb.set_trace()
-df[['output']].to_csv(output_file_name, header=False, sep='|', escapechar='\\', quoting=csv.QUOTE_NONE, index=False)
+df[['output']].to_csv(output_file_name + str(min_queries), header=False, sep='|', escapechar='\\', quoting=csv.QUOTE_NONE, index=False)
