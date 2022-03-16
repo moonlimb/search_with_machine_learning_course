@@ -55,19 +55,23 @@ $ ~/fastText-0.9.2/fasttext skipgram -input /workspace/datasets/fasttext/titles.
 # week 4
 
 shuf /workspace/datasets/labeled_query_data.txt --output /workspace/datasets/shuffled_labeled_query_data.txt 
+shuf /workspace/datasets/labeled_query_data_1000.txt --output /workspace/datasets/shuffled_labeled_query_data_1000.txt 
 
 head -n -24992 /workspace/datasets/shuffled_labeled_query_data.txt > data.train
 tail -n -24992 /workspace/datasets/shuffled_labeled_query_data.txt > data.test
 
+head -n -24935 /workspace/datasets/shuffled_labeled_query_data_1000.txt > data_1000.train
+tail -n -24935 /workspace/datasets/shuffled_labeled_query_data_1000.txt > data_1000.test
+
 alias train_model="~/fastText-0.9.2/fasttext supervised -input /workspace/datasets/data.train -output finish_course"
 #"-lr 1.0 -epoch 25 -wordNgrams 2"
+
+alias train_model="~/fastText-0.9.2/fasttext supervised -input /workspace/datasets/data_1000.train -output finish_course_1000"
 
 # predict
 alias predict_output=~/fastText-0.9.2/fasttext predict finish_course.bin -
 
 # test
 alias test_model="~/fastText-0.9.2/fasttext test finish_course.bin /workspace/datasets/data.test"
-alias test_model_top5="~/fastText-0.9.2/fasttext test finish_course.bin /workspace/datasets/data.test 5"
-alias test_model_top10="~/fastText-0.9.2/fasttext test finish_course.bin /workspace/datasets/data.test 10"
 
-~/fastText-0.9.2/fasttext test
+alias test_model="~/fastText-0.9.2/fasttext test finish_course_1000.bin /workspace/datasets/data.test"

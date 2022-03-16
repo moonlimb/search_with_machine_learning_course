@@ -43,8 +43,6 @@ def shuffle_rows(df: pd.DataFrame, sample_rows: int=5000) -> pd.DataFrame:
 
 # RUN:  python week4/create_labeled_queries.py --min_queries 1000 --read_normalized True
 
-if __name__ == ''
-
 categories_file_name = r'/workspace/datasets/product_data/categories/categories_0001_abcat0010000_to_pcmcat99300050000.xml'
 
 queries_file_name = r'/workspace/datasets/train.csv'
@@ -61,6 +59,8 @@ args = parser.parse_args()
 output_file_name = args.output
 read_normalized = args.read_normalized or None
 min_queries = int(args.min_queries) if args.min_queries else None
+if min_queries:
+    output_file_name = f'/workspace/datasets/labeled_query_data_{min_queries}.txt'
 
 print(f'Config: min queries {min_queries}')
 
@@ -173,4 +173,4 @@ df['label'] = '__label__' + df['category']
 df = df[df['category'].isin(categories)]
 df = df[df['query'].notna() & df['category'].notna() & df['label'].notna()] # not sure why this was ncessary for me
 df['output'] = df['label'] + ' ' + df['query']
-df[['output']].to_csv(output_file_name + str(min_queries), header=False, sep='|', escapechar='\\', quoting=csv.QUOTE_NONE, index=False)
+df[['output']].to_csv(output_file_name, header=False, sep='|', escapechar='\\', quoting=csv.QUOTE_NONE, index=False)
